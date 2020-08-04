@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.android.component.rickmorty_api_component"
+  android:usesCleartextTraffic="true">
+
+  <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
