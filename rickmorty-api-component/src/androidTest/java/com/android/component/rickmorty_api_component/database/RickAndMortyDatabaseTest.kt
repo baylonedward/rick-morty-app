@@ -1,6 +1,7 @@
-package com.android.component.rickmorty_api_component
+package com.android.component.rickmorty_api_component.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.android.component.rickmorty_api_component.AndroidTestSetup
 import com.android.component.rickmorty_api_component.data.entities.CharacterList
 import com.android.component.rickmorty_api_component.data.local.CharacterDao
 import com.google.gson.GsonBuilder
@@ -21,12 +22,12 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class RickAndMortyDatabaseTest {
 
-  private lateinit var testSetup: DatabaseTestSetup
+  private lateinit var testSetup: AndroidTestSetup
   private lateinit var characterDao: CharacterDao
 
   @Before
   fun start() {
-    testSetup = DatabaseTestSetup()
+    testSetup = AndroidTestSetup()
     characterDao = testSetup.characterDao()
   }
 
