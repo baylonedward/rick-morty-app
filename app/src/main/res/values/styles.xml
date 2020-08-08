@@ -1,10 +1,16 @@
 <resources>
-  <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+  <!-- Base Theme -->
+  <style name="BaseTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <item name="android:textColor">@color/thunder</item>
+    <item name="android:textColorPrimary">@color/thunder</item>
+    <item name="android:textColorSecondary">@color/emperor</item>
+    <item name="android:textColorPrimaryInverse">@color/white</item>
+  </style>
+  <!-- Application theme. -->
+  <style name="AppTheme" parent="BaseTheme">
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
   </style>
-
 </resources>
