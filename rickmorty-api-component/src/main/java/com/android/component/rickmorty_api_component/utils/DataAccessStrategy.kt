@@ -5,6 +5,7 @@ import com.android.component.rickmorty_api_component.utils.Resource.Status.SUCCE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 /**
  * Created by: ebaylon.
@@ -16,13 +17,16 @@ fun <T, A> performGetOperation(
   databaseQuery: () -> Flow<T>,
   networkCall: suspend () -> Resource<A>,
   saveCallResult: suspend (A) -> Unit
-): Flow<Resource<T>> = flow {
-  emit(Resource.loading())
-  val source = databaseQuery.invoke().map { Resource.success(it) }
+): Flow<Resource<T>> = channelFlow {
+  send(Resource.loading())
+  launch(Dispatchers.IO) {
+    databaseQuery.invoke().map { Resource.success(it) }.collect {
+      send(it)
+    }
+  }
   val responseStatus = networkCall.invoke()
   when (responseStatus.status) {
     SUCCESS -> responseStatus.data?.also { saveCallResult(it) }
-    ERROR -> emit(Resource.error(responseStatus.message!!))
+    ERROR -> send(Resource.error(responseStatus.message!!))
   }
-  emitAll(source)
 }.flowOn(Dispatchers.IO)

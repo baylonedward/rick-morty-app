@@ -54,6 +54,12 @@ class RickAndMortyRepositoryTest {
           }
         }
       }
+    }
+  }
+
+  @Test
+  fun getCharacterTest() {
+    runBlocking {
       // Single
       launch(Dispatchers.IO) {
         val id = 1
@@ -63,8 +69,10 @@ class RickAndMortyRepositoryTest {
               Assert.assertNull(it.data)
             }
             Resource.Status.SUCCESS -> {
-              Assert.assertEquals(1, it.data?.id)
-              cancel()
+              if (it.data != null) {
+                Assert.assertEquals(id, it.data?.id)
+                cancel()
+              }
             }
             Resource.Status.ERROR -> {
               Assert.assertNotNull(it.message)
