@@ -5,6 +5,7 @@ import com.android.component.rickmorty_api_component.data.entities.CharacterList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Created by: ebaylon.
@@ -17,4 +18,7 @@ interface CharacterService {
 
   @GET("character/{id}")
   suspend fun getCharacter(@Path("id") id: Int): Response<Character>
+
+  @GET("character")
+  suspend fun getCharactersByPage(@Query("page") pageNumber: Int): Response<CharacterList>
 }

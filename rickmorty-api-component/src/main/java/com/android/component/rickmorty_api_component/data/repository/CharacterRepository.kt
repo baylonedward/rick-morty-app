@@ -26,4 +26,10 @@ class CharacterRepository(
     networkCall = { remoteDataSource.getCharacters() },
     saveCallResult = { localDataSource.insert(it.results) }
   )
+
+  fun getCharacters(pageNumber: Int) = performGetOperation(
+    databaseQuery = { localDataSource.getCharacters() },
+    networkCall = { remoteDataSource.getCharacters(pageNumber) },
+    saveCallResult = { localDataSource.insert(it.results) }
+  )
 }

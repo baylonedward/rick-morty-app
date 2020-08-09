@@ -59,7 +59,20 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
     return getCharacter(position)?.image
   }
 
+  /**
+   * By dividing the current count of data into the page size we can determine what page is to be
+   * be loaded next from the API.
+   */
+  fun loadMoreData() {
+    val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
+    api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)
+  }
+
+  fun endOffset() = LIST_END_OFFSET
+
   companion object {
+    private const val LIST_END_OFFSET = 5
+    private const val API_DEFAULT_PAGE_SIZE = 20
     private const val NOT_APPLICABLE = "N/A"
   }
 }

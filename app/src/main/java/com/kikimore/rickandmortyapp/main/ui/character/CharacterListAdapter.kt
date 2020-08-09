@@ -31,5 +31,9 @@ class CharacterListAdapter(private val viewModel: CharacterViewModel) :
       viewModel.getEpisode(position),
       viewModel.getImageUrl(position)
     )
+    // if position = end offset we call method to load more data.
+    if (position == viewModel.characterCount() - viewModel.endOffset()) {
+      viewModel.loadMoreData()
+    }
   }
 }

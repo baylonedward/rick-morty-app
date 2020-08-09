@@ -9,4 +9,5 @@ class CharacterRemoteDataSource(private val characterService: CharacterService) 
 
   suspend fun getCharacters() = getResult { characterService.getAllCharacters() }
   suspend fun getCharacter(id: Int) = getResult { characterService.getCharacter(id) }
+  suspend fun getCharacters(pageNumber: Int) = getResult { characterService.getCharactersByPage(pageNumber) }
 }
