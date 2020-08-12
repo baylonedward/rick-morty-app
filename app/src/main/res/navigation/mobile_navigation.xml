@@ -9,7 +9,7 @@
     android:id="@+id/navigation_character"
     android:name="com.kikimore.rickandmortyapp.main.ui.character.CharacterListFragment"
     android:label="@string/title_character"
-    tools:layout="@layout/fragment_character" />
+    tools:layout="@layout/fragment_characters" />
 
   <fragment
     android:id="@+id/navigation_dashboard"

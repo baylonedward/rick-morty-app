@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
-import kotlinx.android.synthetic.main.fragment_character.view.*
+import kotlinx.android.synthetic.main.fragment_characters.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,7 +28,7 @@ class CharacterListFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.fragment_character, container, false)
+    val root = inflater.inflate(R.layout.fragment_characters, container, false)
     setObservers()
     setListAdapter(root.characterListView)
     return root
