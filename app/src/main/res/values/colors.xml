@@ -8,4 +8,6 @@
   <color name="white">#FFFFFF</color>
   <color name="shady_lady">#B6A5B4</color>
   <color name="pale_prim">#fefdbe</color>
+  <color name="black_overlay">#66000000</color>
+  <color name="light_blue">#b7d8eb</color>
 </resources>

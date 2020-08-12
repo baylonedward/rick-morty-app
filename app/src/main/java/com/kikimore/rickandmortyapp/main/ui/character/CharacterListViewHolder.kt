@@ -1,6 +1,10 @@
 package com.kikimore.rickandmortyapp.main.ui.character
 
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kikimore.rickandmortyapp.R
@@ -13,6 +17,7 @@ import kotlinx.android.synthetic.main.character_list_item_layout.view.*
 class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
   fun onBind(
+    id: Int,
     name: String,
     status: String,
     location: String,
@@ -27,9 +32,9 @@ class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
       // status
       statusTextView.apply {
         val drawable = if (status.contains(DEAD, true)) {
-          itemView.context.getDrawable(R.drawable.ic_dot_red)
+          ContextCompat.getDrawable(itemView.context, R.drawable.ic_dot_red)
         } else {
-          itemView.context.getDrawable(R.drawable.ic_dot_green)
+          ContextCompat.getDrawable(itemView.context, R.drawable.ic_dot_green)
         }
         setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         text = status
@@ -39,6 +44,16 @@ class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         .load(imageUrl)
         .fitCenter()
         .into(characterImageView)
+      // transition name
+      ViewCompat.setTransitionName(characterImageView, name)
+      // on click
+      characterCardView.setOnClickListener {
+        if (id < 0) return@setOnClickListener
+        val extras = FragmentNavigatorExtras(characterImageView to name)
+        val action =
+          CharacterListFragmentDirections.actionNavigationCharactersToNavigationCharacter(name)
+        findNavController().navigate(action, extras)
+      }
     }
   }
 

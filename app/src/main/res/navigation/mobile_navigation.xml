@@ -3,13 +3,24 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/mobile_navigation"
-  app:startDestination="@+id/navigation_character">
+  app:startDestination="@+id/navigation_characters">
 
   <fragment
-    android:id="@+id/navigation_character"
+    android:id="@+id/navigation_characters"
     android:name="com.kikimore.rickandmortyapp.main.ui.character.CharacterListFragment"
     android:label="@string/title_character"
-    tools:layout="@layout/fragment_characters" />
+    tools:layout="@layout/fragment_characters">
+    <action
+      android:id="@+id/action_navigation_characters_to_navigation_character"
+      app:destination="@id/navigation_character">
+      <argument
+        android:name="name"
+        app:argType="string" />
+    </action>
+    <argument
+      android:name="name"
+      app:argType="string" />
+  </fragment>
 
   <fragment
     android:id="@+id/navigation_dashboard"
@@ -22,4 +33,10 @@
     android:name="com.kikimore.rickandmortyapp.main.ui.notifications.NotificationsFragment"
     android:label="@string/title_notifications"
     tools:layout="@layout/fragment_notifications" />
+
+  <fragment
+    android:id="@+id/navigation_character"
+    android:name="com.kikimore.rickandmortyapp.main.ui.character.CharacterFragment"
+    android:label="@string/character"
+    tools:layout="@layout/fragment_character" />
 </navigation>

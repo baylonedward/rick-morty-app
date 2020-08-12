@@ -38,8 +38,10 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun characterCount() = characters.value?.count() ?: 0
 
+  fun getId(position: Int) = getCharacter(position)?.id ?: 0
+
   fun getName(position: Int): String {
-    return characters.value?.get(position)?.name ?: NOT_APPLICABLE
+    return getCharacter(position)?.name ?: NOT_APPLICABLE
   }
 
   fun getStatus(position: Int): String {

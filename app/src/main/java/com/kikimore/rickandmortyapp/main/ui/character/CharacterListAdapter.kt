@@ -25,6 +25,7 @@ class CharacterListAdapter(private val viewModel: CharacterViewModel) :
 
   override fun onBindViewHolder(holder: CharacterListViewHolder, position: Int) {
     holder.onBind(
+      viewModel.getId(position),
       viewModel.getName(position),
       viewModel.getStatus(position),
       viewModel.getLocation(position),

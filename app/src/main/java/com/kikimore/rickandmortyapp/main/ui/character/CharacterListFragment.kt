@@ -35,6 +35,9 @@ class CharacterListFragment : Fragment() {
   }
 
   private fun setObservers() {
+    //
+
+    //
     viewModel.state().onEach {
       if (it == null) return@onEach
       when (it.status) {
@@ -42,7 +45,6 @@ class CharacterListFragment : Fragment() {
           listAdapter.notifyDataSetChanged()
         }
         Resource.Status.LOADING -> {
-          Toast.makeText(this.context, "Loading", Toast.LENGTH_SHORT).show()
         }
         Resource.Status.ERROR -> {
           Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show()
@@ -55,6 +57,11 @@ class CharacterListFragment : Fragment() {
     recyclerView.apply {
       layoutManager = LinearLayoutManager(this@CharacterListFragment.requireContext())
       adapter = this@CharacterListFragment.listAdapter
+      postponeEnterTransition()
+      viewTreeObserver.addOnPreDrawListener {
+        startPostponedEnterTransition()
+        true
+      }
     }
   }
 }
