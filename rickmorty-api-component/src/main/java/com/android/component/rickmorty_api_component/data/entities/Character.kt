@@ -9,10 +9,10 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "characters")
 data class Character(
-  val created: String,
-  val gender: String,
   @PrimaryKey
   val id: Int,
+  val created: String,
+  val gender: String,
   val image: String,
   val name: String,
   val species: String,

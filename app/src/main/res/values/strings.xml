@@ -9,6 +9,6 @@
   <string name="character">Character</string>
   <string name="label_location">Last known location:</string>
   <string name="label_first_episode">First seen in:</string>
-  <string name="dummy_button">Dummy Button</string>
-  <string name="dummy_content">DUMMY\nCONTENT</string>
+  <string name="label_origin">Origin:</string>
+  <string name="label_episode">Episodes:</string>
 </resources>

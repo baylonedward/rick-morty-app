@@ -20,7 +20,13 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 class CharacterListFragment : Fragment() {
 
-  private val viewModel by lazy { fetchViewModel { CharacterViewModel(requireActivity().application) } }
+  private val viewModel by lazy {
+    requireActivity().fetchViewModel {
+      CharacterViewModel(
+        requireActivity().application
+      )
+    }
+  }
   private val listAdapter by lazy { CharacterListAdapter(viewModel) }
 
   override fun onCreateView(
@@ -35,9 +41,6 @@ class CharacterListFragment : Fragment() {
   }
 
   private fun setObservers() {
-    //
-
-    //
     viewModel.state().onEach {
       if (it == null) return@onEach
       when (it.status) {
@@ -57,6 +60,7 @@ class CharacterListFragment : Fragment() {
     recyclerView.apply {
       layoutManager = LinearLayoutManager(this@CharacterListFragment.requireContext())
       adapter = this@CharacterListFragment.listAdapter
+      // set transition
       postponeEnterTransition()
       viewTreeObserver.addOnPreDrawListener {
         startPostponedEnterTransition()

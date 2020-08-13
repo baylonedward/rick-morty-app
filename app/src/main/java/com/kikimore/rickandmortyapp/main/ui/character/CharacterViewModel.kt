@@ -15,6 +15,7 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
   private val api = RickAndMortyApi(getApplication())
   private val characters = MutableStateFlow<List<Character>?>(null)
   private val _state = MutableStateFlow<Resource<List<Character>>?>(null)
+  private val _selectedCharacter = MutableStateFlow<Character?>(null)
 
   init {
     getCharacters()
@@ -26,7 +27,7 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
       .catch { }
       .onEach {
         _state.value = it
-        characters.value = it.data
+        if (it.data != null) characters.value = it.data
       }.launchIn(viewModelScope)
   }
 
@@ -34,6 +35,18 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
     return characters.value?.get(position)
   }
 
+  /**
+   * Selected Character Methods
+   */
+  fun selectedCharacter() = _selectedCharacter
+
+  fun onSelectCharacter(position: Int): () -> Unit = {
+    _selectedCharacter.value = getCharacter(position)
+  }
+
+  /**
+   * Character List methods: Start
+   */
   fun state() = _state
 
   fun characterCount() = characters.value?.count() ?: 0
@@ -76,5 +89,10 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
     private const val LIST_END_OFFSET = 5
     private const val API_DEFAULT_PAGE_SIZE = 20
     private const val NOT_APPLICABLE = "N/A"
+
+    const val DEAD = "dead"
+    const val CHARACTER_NAME_LABEL = "characterName"
+    const val CHARACTER_IMAGE_LABEL = "characterImage"
+    const val CHARACTER_CONTAINER_LABEL = "characterContainer"
   }
 }

@@ -14,12 +14,12 @@
       android:id="@+id/action_navigation_characters_to_navigation_character"
       app:destination="@id/navigation_character">
       <argument
-        android:name="name"
-        app:argType="string" />
+        android:name="id"
+        app:argType="integer" />
     </action>
     <argument
-      android:name="name"
-      app:argType="string" />
+      android:name="id"
+      app:argType="integer" />
   </fragment>
 
   <fragment

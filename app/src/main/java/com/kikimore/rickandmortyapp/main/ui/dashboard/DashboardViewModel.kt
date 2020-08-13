@@ -1,12 +1,11 @@
 package com.kikimore.rickandmortyapp.main.ui.dashboard
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.component.rickmorty_api_component.RickAndMortyApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
 class DashboardViewModel constructor(application: Application) :
@@ -23,8 +22,5 @@ class DashboardViewModel constructor(application: Application) :
   }
 
   private fun getData() {
-    api.characterRepository().getCharacters().distinctUntilChanged().onEach {
-      println("Data: $it")
-    }.launchIn(viewModelScope)
   }
 }
