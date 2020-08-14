@@ -45,7 +45,10 @@ class RickAndMortyRepositoryTest {
             }
             Resource.Status.SUCCESS -> {
               Assert.assertNotNull(it.data)
-              cancel()
+              if (it.data?.count() != 0) {
+                Assert.assertNotNull(it.data?.get(0)?.id)
+                cancel()
+              }
             }
             Resource.Status.ERROR -> {
               Assert.assertNotNull(it.message)
