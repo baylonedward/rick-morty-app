@@ -41,8 +41,9 @@ class AndroidTestSetup {
 
   fun characterRepository(): CharacterRepository {
     return CharacterRepository(
-      localDataSource = db.characterDao(),
-      remoteDataSource = characterRemoteDataSource
+      characterLocalDataSource = db.characterDao(),
+      characterRemoteDataSource = characterRemoteDataSource,
+      characterEpisodePivotLocalDataSource = db.characterEpisodePivotDao()
     )
   }
 

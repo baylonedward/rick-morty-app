@@ -1,7 +1,7 @@
 package com.android.component.rickmorty_api_component.data.remote
 
-import com.android.component.rickmorty_api_component.data.entities.Character
 import com.android.component.rickmorty_api_component.data.entities.EntityList
+import com.android.component.rickmorty_api_component.data.entities.character.Character
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

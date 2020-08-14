@@ -8,6 +8,6 @@ class CharacterRemoteDataSource(private val characterService: CharacterService) 
   BaseDataResource() {
 
   suspend fun getCharacters() = getResult { characterService.getAllCharacters() }
-  suspend fun getCharacter(id: Int) = getResult { characterService.getCharacter(id) }
+  suspend fun getCharacter(id: Int) = getResult { characterService. getCharacter(id) }
   suspend fun getCharacters(pageNumber: Int) = getResult { characterService.getCharactersByPage(pageNumber) }
 }

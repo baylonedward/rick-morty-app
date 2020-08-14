@@ -2,7 +2,7 @@ package com.android.component.rickmorty_api_component
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,12 +24,22 @@ class ApiTest {
   }
 
   @Test
-  fun getCharacters() {
+  fun getAllCharacters() {
     runBlocking {
       val request = testSetup.characterService().getAllCharacters()
       println(request.body())
-      assertNotNull(request.body())
-      assertNotNull(request.body()?.results?.get(0)?.id)
+      assertNotEquals(0, request.body()?.results?.size)
+      assertNotNull(request.body()?.results?.get(0)?.characterId)
+    }
+  }
+
+  @Test
+  fun getCharactersByPage() {
+    runBlocking {
+      val pageNumber = 2
+      val request = testSetup.characterService().getCharactersByPage(pageNumber)
+      assertNotNull(request.body()?.info?.prev)
+      assertNotEquals(0, request.body()?.results?.size)
     }
   }
 
@@ -38,7 +48,48 @@ class ApiTest {
     val characterId = 1
     runBlocking {
       val request = testSetup.characterService().getCharacter(characterId)
+      assertEquals(characterId, request.body()?.characterId)
+    }
+  }
+
+  @Test
+  fun getAllEpisodes() {
+    // All Episodes
+    runBlocking {
+      val request = testSetup.episodeService().getAllEpisodes()
+      assertNotEquals(0, request.body()?.results?.size)
       assertNotNull(request.body())
+    }
+  }
+
+  @Test
+  fun getSelectedEpisodes() {
+    // Selected Episodes
+    runBlocking {
+      val episodes = arrayOf(1, 2)
+      val request = testSetup.episodeService().getEpisodes(episodes.joinToString(separator = ","))
+      assertEquals(episodes.size, request.body()?.size)
+      assertNotNull(request.body())
+    }
+  }
+
+  @Test
+  fun getEpisodesByPage() {
+    runBlocking {
+      val pageNumber = 2
+      val request = testSetup.episodeService().getEpisodeByPage(pageNumber)
+      assertNotNull(request.body()?.info?.prev)
+      assertNotEquals(0, request.body()?.results?.size)
+    }
+  }
+
+  @Test
+  fun getEpisode() {
+    // Single
+    runBlocking {
+      val id = 1
+      val request = testSetup.episodeService().getEpisode(id)
+      assertEquals(id, request.body()?.episodeId)
     }
   }
 }

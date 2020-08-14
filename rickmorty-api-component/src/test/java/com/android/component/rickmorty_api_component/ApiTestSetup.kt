@@ -1,6 +1,7 @@
 package com.android.component.rickmorty_api_component
 
 import com.android.component.rickmorty_api_component.data.remote.CharacterService
+import com.android.component.rickmorty_api_component.data.remote.EpisodeService
 import com.android.component.rickmorty_api_component.utils.loggingInterceptor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.OkHttpClient
@@ -21,4 +22,6 @@ class ApiTestSetup {
     .build()
 
   fun characterService(): CharacterService = retrofit.create(CharacterService::class.java)
+
+  fun episodeService(): EpisodeService = retrofit.create(EpisodeService::class.java)
 }

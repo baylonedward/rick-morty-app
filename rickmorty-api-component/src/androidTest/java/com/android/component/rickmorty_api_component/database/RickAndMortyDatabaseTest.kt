@@ -2,8 +2,8 @@ package com.android.component.rickmorty_api_component.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.android.component.rickmorty_api_component.AndroidTestSetup
-import com.android.component.rickmorty_api_component.data.entities.Character
 import com.android.component.rickmorty_api_component.data.entities.EntityList
+import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.data.local.CharacterDao
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -84,8 +84,8 @@ class RickAndMortyDatabaseTest {
       launch {
         val character = characterList.results[0]
         characterDao.insert(character)
-        characterDao.getCharacter(character.id).collect {
-          Assert.assertEquals(character.id, it.id)
+        characterDao.getCharacter(character.characterId).collect {
+          Assert.assertEquals(character.characterId, it.characterId)
           cancel()
         }
       }

@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 fun <T, A> performGetOperation(
   databaseQuery: () -> Flow<T>,
   networkCall: suspend () -> Resource<A>,
-  saveCallResult: suspend (A) -> Unit
+  saveCallResult: suspend (A) -> Unit,
+  networkCallBack: (suspend (A) -> Unit)? = null
 ): Flow<Resource<T>> = channelFlow {
   send(Resource.loading())
   launch(Dispatchers.IO) {
@@ -26,7 +27,12 @@ fun <T, A> performGetOperation(
   }
   val responseStatus = networkCall.invoke()
   when (responseStatus.status) {
-    SUCCESS -> responseStatus.data?.also { saveCallResult(it) }
+    SUCCESS -> {
+      responseStatus.data?.also {
+        saveCallResult(it)
+        networkCallBack?.invoke(it)
+      }
+    }
     ERROR -> send(Resource.error(responseStatus.message!!))
   }
 }.flowOn(Dispatchers.IO)

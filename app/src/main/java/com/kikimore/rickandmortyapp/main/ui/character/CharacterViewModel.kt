@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.component.rickmorty_api_component.RickAndMortyApi
-import com.android.component.rickmorty_api_component.data.entities.Character
+import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -51,7 +51,7 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun characterCount() = characters.value?.count() ?: 0
 
-  fun getId(position: Int) = getCharacter(position)?.id ?: 0
+  fun getId(position: Int) = getCharacter(position)?.characterId ?: 0
 
   fun getName(position: Int): String {
     return getCharacter(position)?.name ?: NOT_APPLICABLE

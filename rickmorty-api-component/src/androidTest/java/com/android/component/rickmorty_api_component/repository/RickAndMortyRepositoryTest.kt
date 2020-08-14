@@ -46,7 +46,7 @@ class RickAndMortyRepositoryTest {
             Resource.Status.SUCCESS -> {
               Assert.assertNotNull(it.data)
               if (it.data?.count() != 0) {
-                Assert.assertNotNull(it.data?.get(0)?.id)
+                Assert.assertNotNull(it.data?.get(0)?.characterId)
                 cancel()
               }
             }
@@ -73,7 +73,7 @@ class RickAndMortyRepositoryTest {
             }
             Resource.Status.SUCCESS -> {
               if (it.data != null) {
-                Assert.assertEquals(id, it.data?.id)
+                Assert.assertEquals(id, it.data?.characterId)
                 cancel()
               }
             }
