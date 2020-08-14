@@ -2,9 +2,9 @@ package com.android.component.rickmorty_api_component.data.entities
 
 /**
  * Created by: ebaylon.
- * Created on: 23/07/2020.
+ * Created on: 14/08/2020.
  */
-data class CharacterList(
+data class EntityList<T>(
   val info: Info,
-  val results: List<Character>
+  val results: List<T>
 )

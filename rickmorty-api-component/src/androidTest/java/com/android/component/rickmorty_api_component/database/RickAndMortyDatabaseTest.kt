@@ -2,9 +2,11 @@ package com.android.component.rickmorty_api_component.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.android.component.rickmorty_api_component.AndroidTestSetup
-import com.android.component.rickmorty_api_component.data.entities.CharacterList
+import com.android.component.rickmorty_api_component.data.entities.Character
+import com.android.component.rickmorty_api_component.data.entities.EntityList
 import com.android.component.rickmorty_api_component.data.local.CharacterDao
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import org.junit.After
@@ -41,8 +43,9 @@ class RickAndMortyDatabaseTest {
   fun deleteCharactersTest() {
     runBlocking(Dispatchers.IO) {
       val charactersString = testSetup.readJsonFile("characters.json")
+      val type = object : TypeToken<EntityList<Character>>() {}.type
       val characterList =
-        GsonBuilder().create().fromJson(charactersString, CharacterList::class.java)
+        GsonBuilder().create().fromJson<EntityList<Character>>(charactersString, type)
       // Delete Single
       launch {
         val character = characterList.results[0]
@@ -73,8 +76,10 @@ class RickAndMortyDatabaseTest {
   @Test
   fun insertCharactersTest() {
     runBlocking(Dispatchers.IO) {
-      val characters = testSetup.readJsonFile("characters.json")
-      val characterList = GsonBuilder().create().fromJson(characters, CharacterList::class.java)
+      val charactersString = testSetup.readJsonFile("characters.json")
+      val type = object : TypeToken<EntityList<Character>>() {}.type
+      val characterList =
+        GsonBuilder().create().fromJson<EntityList<Character>>(charactersString, type)
       // Insert Single
       launch {
         val character = characterList.results[0]

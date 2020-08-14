@@ -1,7 +1,7 @@
 package com.android.component.rickmorty_api_component.data.remote
 
 import com.android.component.rickmorty_api_component.data.entities.Character
-import com.android.component.rickmorty_api_component.data.entities.CharacterList
+import com.android.component.rickmorty_api_component.data.entities.EntityList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,11 +14,11 @@ import retrofit2.http.Query
 interface CharacterService {
 
   @GET("character")
-  suspend fun getAllCharacters(): Response<CharacterList>
+  suspend fun getAllCharacters(): Response<EntityList<Character>>
 
   @GET("character/{id}")
   suspend fun getCharacter(@Path("id") id: Int): Response<Character>
 
   @GET("character")
-  suspend fun getCharactersByPage(@Query("page") pageNumber: Int): Response<CharacterList>
+  suspend fun getCharactersByPage(@Query("page") pageNumber: Int): Response<EntityList<Character>>
 }
