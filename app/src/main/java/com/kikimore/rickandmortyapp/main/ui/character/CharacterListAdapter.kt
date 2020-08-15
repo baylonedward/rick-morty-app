@@ -29,13 +29,13 @@ class CharacterListAdapter(private val viewModel: CharacterViewModel) :
       viewModel.getName(position),
       viewModel.getStatus(position),
       viewModel.getLocation(position),
-      viewModel.getEpisode(position),
+      viewModel.getFirstEpisode(position),
       viewModel.getImageUrl(position),
       viewModel.onSelectCharacter(position)
     )
     // if position = end offset we call method to load more data.
     if (position == viewModel.characterCount() - viewModel.endOffset()) {
-      viewModel.loadMoreData()
+      viewModel.loadMoreCharacters()
     }
   }
 }

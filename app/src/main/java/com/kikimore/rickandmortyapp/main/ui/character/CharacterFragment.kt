@@ -10,6 +10,8 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.utils.Resource
@@ -33,6 +35,7 @@ class CharacterFragment : Fragment() {
       )
     }
   }
+  private val episodeListAdapter by lazy { EpisodeListAdapter(viewModel) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,7 +50,9 @@ class CharacterFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.fragment_character, container, false)
+    val view = inflater.inflate(R.layout.fragment_character, container, false)
+    setEpisodeListAdapter(view.episodeListView)
+    return view
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,13 +61,18 @@ class CharacterFragment : Fragment() {
     setTransitions(view)
   }
 
+  override fun onDestroy() {
+    super.onDestroy()
+    viewModel.unloadEpisodes()
+  }
+
   private fun setObserver(view: View) {
     viewModel.characterAndEpisodeState().onEach {
       if (it == null) return@onEach
       when (it.status) {
         Resource.Status.SUCCESS -> {
           it.data?.character?.also { character -> setCharacter(character, view) }
-          println("Episodes: ${it.data?.episodes}")
+          episodeListAdapter.notifyDataSetChanged()
         }
         Resource.Status.LOADING -> {
         }
@@ -103,5 +113,12 @@ class CharacterFragment : Fragment() {
     ViewCompat.setTransitionName(view.nameTextView, nameSharedElement)
     ViewCompat.setTransitionName(view.characterImageView, imageSharedElement)
     ViewCompat.setTransitionName(view.containerView, containerSharedElement)
+  }
+
+  private fun setEpisodeListAdapter(recyclerView: RecyclerView) {
+    recyclerView.apply {
+      layoutManager = LinearLayoutManager(this@CharacterFragment.requireContext())
+      adapter = this@CharacterFragment.episodeListAdapter
+    }
   }
 }

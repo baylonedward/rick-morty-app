@@ -12,7 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(application: Application) : ViewModel() {
+class CharacterViewModel(application: Application) : ViewModel(), EpisodeListStrategy {
 
   private val api = RickAndMortyApi(application)
   private val characters = MutableStateFlow<List<Character>?>(null)
@@ -41,7 +41,7 @@ class CharacterViewModel(application: Application) : ViewModel() {
         .onEach {
           _characterAndEpisodeState.value = it
           it.data?.episodes?.also { list ->
-            episodes.value = list
+            episodes.value = list.sortedBy { episode -> episode.episodeId }
           }
         }.launchIn(viewModelScope)
     }
@@ -81,7 +81,7 @@ class CharacterViewModel(application: Application) : ViewModel() {
     return getCharacter(position)?.gender ?: NOT_APPLICABLE
   }
 
-  fun getEpisode(position: Int): String {
+  fun getFirstEpisode(position: Int): String {
     return getCharacter(position)?.created ?: NOT_APPLICABLE
   }
 
@@ -93,12 +93,38 @@ class CharacterViewModel(application: Application) : ViewModel() {
    * By dividing the current count of data into the page size we can determine what page is to be
    * be loaded next from the API.
    */
-  fun loadMoreData() {
+  fun loadMoreCharacters() {
     val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
     api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)
   }
 
   fun endOffset() = LIST_END_OFFSET
+
+  /**
+   * Episode Methods
+   */
+  private fun getEpisode(position: Int) = episodes.value?.get(position)
+  
+  fun unloadEpisodes() {
+    episodes.value = null
+  }
+
+  /**
+   * EpisodeListStrategy Methods
+   */
+
+  override fun getEpisodeSummary(position: Int): String {
+    val episode = getEpisode(position)
+    return "${episode?.episode}: ${episode?.name} - ${episode?.airDate}"
+  }
+
+  override fun getEpisodeCount(): Int {
+    return episodes.value?.size ?: 0
+  }
+
+  override fun onEpisodeClick(position: Int): () -> Unit = {
+    println("Episode Click: ${getEpisode(position)}")
+  }
 
   companion object {
     private const val LIST_END_OFFSET = 5
