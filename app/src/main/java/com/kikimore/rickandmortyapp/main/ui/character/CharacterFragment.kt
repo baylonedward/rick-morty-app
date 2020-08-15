@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
+import com.android.component.rickmorty_api_component.data.entities.character.Character
+import com.android.component.rickmorty_api_component.utils.Resource
 import com.bumptech.glide.Glide
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
@@ -35,6 +38,8 @@ class CharacterFragment : Fragment() {
     super.onCreate(savedInstanceState)
     sharedElementEnterTransition =
       TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    // trigger episodes fetch
+    viewModel.getCharacterAndEpisodes()
   }
 
   override fun onCreateView(
@@ -52,29 +57,43 @@ class CharacterFragment : Fragment() {
   }
 
   private fun setObserver(view: View) {
-    viewModel.selectedCharacter().onEach {
+    viewModel.characterAndEpisodeState().onEach {
       if (it == null) return@onEach
-      // image url
-      Glide.with(view)
-        .load(it.image)
-        .fitCenter()
-        .into(characterImageView)
-      // name
-      view.nameTextView.text = it.name
-      // status
-      val statusDrawable = if (it.status.contains(CharacterViewModel.DEAD, true))
-        ContextCompat.getDrawable(view.context, R.drawable.ic_dot_red)
-      else
-        ContextCompat.getDrawable(view.context, R.drawable.ic_dot_green)
-      view.statusImageView.setImageDrawable(statusDrawable)
-      // specie and gender
-      val specieGender = "${it.species} - ${it.gender}"
-      view.specieGenderTextView.text = specieGender
-      // origin
-      view.originTextView.text = it.status
-      //location
-      view.locationTextView.text = it.created
+      when (it.status) {
+        Resource.Status.SUCCESS -> {
+          it.data?.character?.also { character -> setCharacter(character, view) }
+          println("Episodes: ${it.data?.episodes}")
+        }
+        Resource.Status.LOADING -> {
+        }
+        Resource.Status.ERROR -> {
+          Toast.makeText(this.context, "${it.message}", Toast.LENGTH_SHORT).show()
+        }
+      }
     }.launchIn(lifecycleScope)
+  }
+
+  private fun setCharacter(character: Character, view: View) {
+    // image url
+    Glide.with(view)
+      .load(character.image)
+      .centerInside()
+      .into(characterImageView)
+    // name
+    view.nameTextView.text = character.name
+    // status
+    val statusDrawable = if (character.status.contains(CharacterViewModel.DEAD, true))
+      ContextCompat.getDrawable(view.context, R.drawable.ic_dot_red)
+    else
+      ContextCompat.getDrawable(view.context, R.drawable.ic_dot_green)
+    view.statusImageView.setImageDrawable(statusDrawable)
+    // specie and gender
+    val specieGender = "${character.species} - ${character.gender}"
+    view.specieGenderTextView.text = specieGender
+    // origin
+    view.originTextView.text = character.status
+    //location
+    view.locationTextView.text = character.created
   }
 
   private fun setTransitions(view: View) {

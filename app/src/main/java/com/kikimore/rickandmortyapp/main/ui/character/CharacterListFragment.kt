@@ -29,6 +29,11 @@ class CharacterListFragment : Fragment() {
   }
   private val listAdapter by lazy { CharacterListAdapter(viewModel) }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    viewModel.getCharacters()
+  }
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -41,7 +46,7 @@ class CharacterListFragment : Fragment() {
   }
 
   private fun setObservers() {
-    viewModel.state().onEach {
+    viewModel.characterListState().onEach {
       if (it == null) return@onEach
       when (it.status) {
         Resource.Status.SUCCESS -> {

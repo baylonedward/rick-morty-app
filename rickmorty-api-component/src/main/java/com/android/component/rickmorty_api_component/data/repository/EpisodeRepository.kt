@@ -1,7 +1,8 @@
 package com.android.component.rickmorty_api_component.data.repository
 
-import com.android.component.rickmorty_api_component.data.entities.episode.Episode
+import com.android.component.rickmorty_api_component.data.local.EpisodeDao
 import com.android.component.rickmorty_api_component.data.remote.EpisodeRemoteDataSource
+import com.android.component.rickmorty_api_component.utils.performGetOperation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
@@ -10,7 +11,25 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  */
 @ExperimentalCoroutinesApi
 class EpisodeRepository(
-  private val remoteDataSource: EpisodeRemoteDataSource,
-  private val localDataSource: Episode
+  private val episodeRemoteDataSource: EpisodeRemoteDataSource,
+  private val episodeLocalDataSource: EpisodeDao
 ) {
+
+  fun getEpisodes() = performGetOperation(
+    databaseQuery = { episodeLocalDataSource.getEpisodes() },
+    networkCall = { episodeRemoteDataSource.getEpisodes() },
+    saveCallResult = { episodeLocalDataSource.insert(it.results) }
+  )
+
+  fun getEpisodes(ids: Array<Int>) = performGetOperation(
+    databaseQuery = { episodeLocalDataSource.getEpisodes() },
+    networkCall = { episodeRemoteDataSource.getEpisodes(ids) },
+    saveCallResult = { episodeLocalDataSource.insert(it) }
+  )
+
+  fun getEpisodes(pageNumber: Int) = performGetOperation(
+    databaseQuery = { episodeLocalDataSource.getEpisodes() },
+    networkCall = { episodeRemoteDataSource.getEpisodes(pageNumber) },
+    saveCallResult = { episodeLocalDataSource.insert(it.results) }
+  )
 }

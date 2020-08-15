@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.data.entities.character.CharacterEpisodes
+import com.android.component.rickmorty_api_component.data.entities.pivot.CharacterEpisodePivot
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -28,5 +29,8 @@ interface CharacterDao : BaseDao<Character> {
 
   @Transaction
   @Query("SELECT * FROM characters WHERE characterId = :id LIMIT 1")
-  fun getEpisodes(id: Int): Flow<CharacterEpisodes>
+  fun getCharacterAndEpisodes(id: Int): Flow<CharacterEpisodes>
+
+  @Query("SELECT * FROM characters_episodes_pivot WHERE characterId = :id")
+  fun getEpisodeIds(id: Int): Flow<List<CharacterEpisodePivot>>
 }

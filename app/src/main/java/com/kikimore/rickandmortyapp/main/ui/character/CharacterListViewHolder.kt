@@ -45,7 +45,7 @@ class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
       // character image
       Glide.with(itemView)
         .load(imageUrl)
-        .fitCenter()
+        .centerInside()
         .into(characterImageView)
       // transition name
       val nameSharedElement = "${CharacterViewModel.CHARACTER_NAME_LABEL}$id"

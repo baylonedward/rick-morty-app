@@ -1,35 +1,25 @@
 package com.kikimore.rickandmortyapp.main.ui.character
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.component.rickmorty_api_component.RickAndMortyApi
 import com.android.component.rickmorty_api_component.data.entities.character.Character
+import com.android.component.rickmorty_api_component.data.entities.character.CharacterEpisodes
+import com.android.component.rickmorty_api_component.data.entities.episode.Episode
 import com.android.component.rickmorty_api_component.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(application: Application) : AndroidViewModel(application) {
+class CharacterViewModel(application: Application) : ViewModel() {
 
-  private val api = RickAndMortyApi(getApplication())
+  private val api = RickAndMortyApi(application)
   private val characters = MutableStateFlow<List<Character>?>(null)
-  private val _state = MutableStateFlow<Resource<List<Character>>?>(null)
+  private val _characterListState = MutableStateFlow<Resource<List<Character>>?>(null)
+  private val episodes = MutableStateFlow<List<Episode>?>(null)
+  private val _characterAndEpisodeState = MutableStateFlow<Resource<CharacterEpisodes>?>(null)
   private val _selectedCharacter = MutableStateFlow<Character?>(null)
-
-  init {
-    getCharacters()
-  }
-
-  private fun getCharacters() {
-    api.characterRepository().getCharacters()
-      .distinctUntilChanged()
-      .catch { }
-      .onEach {
-        _state.value = it
-        if (it.data != null) characters.value = it.data
-      }.launchIn(viewModelScope)
-  }
 
   private fun getCharacter(position: Int): Character? {
     return characters.value?.get(position)
@@ -38,16 +28,41 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
   /**
    * Selected Character Methods
    */
-  fun selectedCharacter() = _selectedCharacter
 
   fun onSelectCharacter(position: Int): () -> Unit = {
     _selectedCharacter.value = getCharacter(position)
   }
 
+  fun getCharacterAndEpisodes() {
+    _selectedCharacter.value?.characterId?.also { id ->
+      api.characterRepository().getCharacterAndEpisodes(id)
+        .distinctUntilChanged()
+        .catch { }
+        .onEach {
+          _characterAndEpisodeState.value = it
+          it.data?.episodes?.also { list ->
+            episodes.value = list
+          }
+        }.launchIn(viewModelScope)
+    }
+  }
+
+  fun characterAndEpisodeState() = _characterAndEpisodeState
+
   /**
    * Character List methods: Start
    */
-  fun state() = _state
+  fun getCharacters() {
+    api.characterRepository().getCharacters()
+      .distinctUntilChanged()
+      .catch { }
+      .onEach {
+        _characterListState.value = it
+        if (it.data != null) characters.value = it.data
+      }.launchIn(viewModelScope)
+  }
+
+  fun characterListState() = _characterListState
 
   fun characterCount() = characters.value?.count() ?: 0
 

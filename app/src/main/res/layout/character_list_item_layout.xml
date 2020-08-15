@@ -10,7 +10,7 @@
   android:layout_marginEnd="8dp"
   android:layout_marginBottom="4dp"
   android:clipToPadding="true"
-  app:cardBackgroundColor="@color/emperor"
+  app:cardBackgroundColor="@color/dark_slate_gray"
   app:cardCornerRadius="8dp"
   app:contentPadding="0dp">
 

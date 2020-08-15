@@ -20,7 +20,7 @@ fun <T, A> performGetOperation(
   networkCallBack: (suspend (A) -> Unit)? = null
 ): Flow<Resource<T>> = channelFlow {
   send(Resource.loading())
-  launch(Dispatchers.IO) {
+  launch {
     databaseQuery.invoke().map { Resource.success(it) }.collect {
       send(it)
     }
@@ -34,5 +34,7 @@ fun <T, A> performGetOperation(
       }
     }
     ERROR -> send(Resource.error(responseStatus.message!!))
+    else -> {
+    }
   }
 }.flowOn(Dispatchers.IO)

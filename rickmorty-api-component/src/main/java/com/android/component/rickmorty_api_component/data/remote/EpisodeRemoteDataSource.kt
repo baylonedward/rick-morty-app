@@ -9,7 +9,15 @@ class EpisodeRemoteDataSource(private val episodeService: EpisodeService) : Base
   suspend fun getEpisodes() = getResult { episodeService.getAllEpisodes() }
 
   suspend fun getEpisodes(ids: Array<Int>) =
-    getResult { episodeService.getEpisodes(ids.joinToString(separator = ",")) }
+    getResult {
+      episodeService.getEpisodes(
+        ids.joinToString(
+          separator = ",",
+          prefix = "[",
+          postfix = "]"
+        )
+      )
+    }
 
   suspend fun getEpisodes(pageNumber: Int) =
     getResult { episodeService.getEpisodeByPage(pageNumber) }
