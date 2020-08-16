@@ -21,24 +21,35 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="8dp"
+      android:fontFamily="sans-serif-condensed-light"
       android:textColor="@color/emperor"
       android:textSize="14sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/imageView"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:text="S01E01: Pilot - December 2, 2013" />
+      tools:text="S01E01: Pilot" />
 
     <ImageView
       android:id="@+id/imageView"
       android:layout_width="wrap_content"
       android:layout_height="0dp"
-      app:layout_constraintBottom_toBottomOf="@+id/episodeDetailTextView"
+      app:layout_constraintBottom_toBottomOf="@+id/episodeAirDateTextView"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="@+id/episodeDetailTextView"
       app:srcCompat="@drawable/ic_baseline_arrow_forward"
       app:tint="@color/emperor" />
+
+    <TextView
+      android:id="@+id/episodeAirDateTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-condensed-light"
+      android:textSize="12sp"
+      app:layout_constraintEnd_toEndOf="@+id/episodeDetailTextView"
+      app:layout_constraintStart_toStartOf="@+id/episodeDetailTextView"
+      app:layout_constraintTop_toBottomOf="@+id/episodeDetailTextView"
+      tools:text="December 2, 2013" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 

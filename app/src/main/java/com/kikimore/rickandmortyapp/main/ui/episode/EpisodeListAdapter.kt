@@ -27,13 +27,15 @@ class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
   override fun onBindViewHolder(holder: EpisodeListViewHolder, position: Int) {
     holder.bind(
       episodeListStrategy.getEpisodeSummary(position),
+      episodeListStrategy.getEpisodeAirDate(position),
       episodeListStrategy.onEpisodeClick(position)
     )
   }
 
   class EpisodeListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(summary: String, onClick: () -> Unit) {
+    fun bind(summary: String, airDate: String, onClick: () -> Unit) {
       itemView.episodeDetailTextView.text = summary
+      itemView.episodeAirDateTextView.text = airDate
       itemView.episodeCardView.setOnClickListener {
         onClick()
       }

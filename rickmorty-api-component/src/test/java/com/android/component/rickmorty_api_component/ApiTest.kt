@@ -66,7 +66,7 @@ class ApiTest {
   fun getSelectedEpisodes() {
     // Selected Episodes
     runBlocking {
-      val episodes = arrayOf(1, 2)
+      val episodes = arrayOf(24, 28)
       val request = testSetup.episodeService()
         .getEpisodes(episodes.joinToString(separator = ",", prefix = "[", postfix = "]"))
       assertEquals(episodes.size, request.body()?.size)

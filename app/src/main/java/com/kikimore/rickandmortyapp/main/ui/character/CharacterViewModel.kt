@@ -106,7 +106,7 @@ class CharacterViewModel(application: Application) : ViewModel(),
    * Episode Methods
    */
   private fun getEpisode(position: Int) = episodes.value?.get(position)
-  
+
   fun unloadEpisodes() {
     episodes.value = null
   }
@@ -117,7 +117,11 @@ class CharacterViewModel(application: Application) : ViewModel(),
 
   override fun getEpisodeSummary(position: Int): String {
     val episode = getEpisode(position)
-    return "${episode?.episode}: ${episode?.name} - ${episode?.airDate}"
+    return "${episode?.episode}: ${episode?.name}"
+  }
+
+  override fun getEpisodeAirDate(position: Int): String {
+    return "${getEpisode(position)?.airDate}"
   }
 
   override fun getEpisodeCount(): Int {

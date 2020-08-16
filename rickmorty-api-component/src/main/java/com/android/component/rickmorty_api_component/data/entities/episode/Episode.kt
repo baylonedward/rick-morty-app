@@ -20,4 +20,24 @@ data class Episode(
   val episode: String,
   val url: String,
   val created: String
-)
+) {
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other !is Episode) return false
+    return (this.episodeId == other.episodeId
+     && this.episode == other.episode
+     && this.airDate == other.airDate
+     && this.created == other.created
+     && this.name == other.name
+     && this.url == other.url)
+  }
+
+  override fun hashCode(): Int {
+    var result = episodeId
+    result = 31 * result + name.hashCode()
+    result = 31 * result + airDate.hashCode()
+    result = 31 * result + episode.hashCode()
+    result = 31 * result + url.hashCode()
+    result = 31 * result + created.hashCode()
+    return result
+  }
+}

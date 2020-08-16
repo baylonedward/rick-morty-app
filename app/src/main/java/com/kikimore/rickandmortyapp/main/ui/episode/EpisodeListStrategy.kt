@@ -8,6 +8,8 @@ interface EpisodeListStrategy {
 
   fun getEpisodeSummary(position: Int): String
 
+  fun getEpisodeAirDate(position: Int): String
+
   fun getEpisodeCount(): Int
 
   fun onEpisodeClick(position: Int): () -> Unit
