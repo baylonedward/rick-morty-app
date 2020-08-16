@@ -10,9 +10,9 @@ import com.android.component.rickmorty_api_component.data.remote.CharacterRemote
 import com.android.component.rickmorty_api_component.data.remote.EpisodeRemoteDataSource
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.android.component.rickmorty_api_component.utils.performGetOperation
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -81,9 +81,11 @@ class CharacterRepository(
           when (request.status) {
             Resource.Status.SUCCESS -> {
               request.data?.also { episodeLocalDataSource.insert(it) }
+              cancel()
             }
             Resource.Status.ERROR -> {
               send(Resource.error(request.message!!))
+              cancel()
             }
             else -> {
             }
