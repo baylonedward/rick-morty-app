@@ -1,4 +1,4 @@
-package com.kikimore.rickandmortyapp.main.ui.dashboard
+package com.kikimore.rickandmortyapp.main.ui.episode
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -8,7 +8,7 @@ import com.android.component.rickmorty_api_component.RickAndMortyApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class DashboardViewModel(application: Application) : ViewModel() {
+class EpisodeViewModel(application: Application) : ViewModel() {
 
   private val api = RickAndMortyApi.getInstance(application)
   private val _text = MutableLiveData<String>().apply {

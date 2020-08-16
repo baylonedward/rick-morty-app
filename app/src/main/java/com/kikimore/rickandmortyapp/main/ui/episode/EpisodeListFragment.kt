@@ -1,4 +1,4 @@
-package com.kikimore.rickandmortyapp.main.ui.dashboard
+package com.kikimore.rickandmortyapp.main.ui.episode
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,15 +12,15 @@ import com.kikimore.rickandmortyapp.utils.fetchViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class DashboardFragment : Fragment() {
-  private val dashboardViewModel by lazy { fetchViewModel { DashboardViewModel(requireActivity().application) } }
+class EpisodeListFragment : Fragment() {
+  private val dashboardViewModel by lazy { fetchViewModel { EpisodeViewModel(requireActivity().application) } }
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+    val root = inflater.inflate(R.layout.fragment_episodes, container, false)
     val textView: TextView = root.findViewById(R.id.text_dashboard)
     dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
       textView.text = it

@@ -1,4 +1,4 @@
-package com.kikimore.rickandmortyapp.main.ui.character
+package com.kikimore.rickandmortyapp.main.ui.episode
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +17,9 @@ class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeListViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
     val view = layoutInflater.inflate(R.layout.episode_list_item_layout, parent, false)
-    return EpisodeListViewHolder(view)
+    return EpisodeListViewHolder(
+      view
+    )
   }
 
   override fun getItemCount(): Int = episodeListStrategy.getEpisodeCount()

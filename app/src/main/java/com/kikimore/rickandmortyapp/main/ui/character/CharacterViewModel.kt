@@ -8,11 +8,13 @@ import com.android.component.rickmorty_api_component.data.entities.character.Cha
 import com.android.component.rickmorty_api_component.data.entities.character.CharacterEpisodes
 import com.android.component.rickmorty_api_component.data.entities.episode.Episode
 import com.android.component.rickmorty_api_component.utils.Resource
+import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListStrategy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(application: Application) : ViewModel(), EpisodeListStrategy {
+class CharacterViewModel(application: Application) : ViewModel(),
+  EpisodeListStrategy {
 
   private val api = RickAndMortyApi(application)
   private val characters = MutableStateFlow<List<Character>?>(null)

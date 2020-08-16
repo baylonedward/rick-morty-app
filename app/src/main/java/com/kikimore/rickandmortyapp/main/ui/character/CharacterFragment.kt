@@ -17,6 +17,7 @@ import com.android.component.rickmorty_api_component.data.entities.character.Cha
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.bumptech.glide.Glide
 import com.kikimore.rickandmortyapp.R
+import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListAdapter
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
 import kotlinx.android.synthetic.main.fragment_character.*
 import kotlinx.android.synthetic.main.fragment_character.view.*
@@ -35,7 +36,11 @@ class CharacterFragment : Fragment() {
       )
     }
   }
-  private val episodeListAdapter by lazy { EpisodeListAdapter(viewModel) }
+  private val episodeListAdapter by lazy {
+    EpisodeListAdapter(
+      viewModel
+    )
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

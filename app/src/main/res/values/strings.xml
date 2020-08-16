@@ -11,4 +11,7 @@
   <string name="label_first_episode">First seen in:</string>
   <string name="label_origin">Origin:</string>
   <string name="label_episode">Episodes:</string>
+
+  <!-- Episode -->
+  <string name="episode">Episode</string>
 </resources>

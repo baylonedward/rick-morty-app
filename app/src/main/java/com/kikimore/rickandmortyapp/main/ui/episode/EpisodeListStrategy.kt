@@ -1,4 +1,4 @@
-package com.kikimore.rickandmortyapp.main.ui.character
+package com.kikimore.rickandmortyapp.main.ui.episode
 
 /**
  * Created by: ebaylon.
