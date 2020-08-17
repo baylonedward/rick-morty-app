@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.component.rickmorty_api_component.RickAndMortyApi
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
@@ -19,13 +20,9 @@ import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
 class CharacterListFragment : Fragment() {
-
+  private val api by lazy { RickAndMortyApi(requireActivity().application) }
   private val viewModel by lazy {
-    requireActivity().fetchViewModel {
-      CharacterViewModel(
-        requireActivity().application
-      )
-    }
+    requireActivity().fetchViewModel { CharacterViewModel(api) }
   }
   private val listAdapter by lazy { CharacterListAdapter(viewModel) }
 

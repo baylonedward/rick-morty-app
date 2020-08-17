@@ -1,6 +1,5 @@
 package com.kikimore.rickandmortyapp.main.ui.character
 
-import android.app.Application
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,10 +16,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(private val application: Application) : ViewModel(),
-  EpisodeListStrategy {
+class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), EpisodeListStrategy {
 
-  private val api = RickAndMortyApi(application)
   private val characters = MutableStateFlow<List<Character>?>(null)
   private val _characterListState = MutableStateFlow<Resource<List<Character>>?>(null)
   private val episodes = MutableStateFlow<List<Episode>?>(null)
@@ -100,10 +97,6 @@ class CharacterViewModel(private val application: Application) : ViewModel(),
       view.findNavController().navigate(action, extras)
     }
 
-  /**
-   * By dividing the current count of data into the page size we can determine what page is to be
-   * be loaded next from the API.
-   */
   fun loadMoreCharacters() {
     val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
     api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)

@@ -9,10 +9,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
+import com.android.component.rickmorty_api_component.RickAndMortyApi
 import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.bumptech.glide.Glide
@@ -27,14 +27,8 @@ import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
 class CharacterFragment : Fragment() {
-
-  private val viewModel by lazy {
-    requireActivity().fetchViewModel {
-      CharacterViewModel(
-        requireActivity().application
-      )
-    }
-  }
+  private val api by lazy { RickAndMortyApi(requireActivity().application) }
+  private val viewModel by lazy { requireActivity().fetchViewModel { CharacterViewModel(api) } }
   private val episodeListAdapter by lazy {
     EpisodeListAdapter(
       viewModel
