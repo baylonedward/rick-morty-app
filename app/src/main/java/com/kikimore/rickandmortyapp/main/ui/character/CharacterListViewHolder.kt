@@ -3,7 +3,8 @@ package com.kikimore.rickandmortyapp.main.ui.character
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.findNavController
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,7 +26,7 @@ class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
     location: String,
     episode: String,
     imageUrl: String?,
-    onSelect: () -> Unit
+    onSelect: (view: View, actions: NavDirections, extras: FragmentNavigator.Extras) -> Unit
   ) {
     itemView.apply {
       nameTextView.text = name
@@ -54,20 +55,19 @@ class CharacterListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
       ViewCompat.setTransitionName(nameTextView, nameSharedElement)
       ViewCompat.setTransitionName(characterImageView, imageShareElement)
       ViewCompat.setTransitionName(characterCardView, containerSharedElement)
+      // navigate to character fragment
+      val extras: FragmentNavigator.Extras = FragmentNavigatorExtras(
+        nameTextView to nameSharedElement,
+        characterImageView to imageShareElement,
+        characterCardView to containerSharedElement
+      )
+      val action =
+        CharacterListFragmentDirections.actionNavigationCharactersToNavigationCharacter()
       // on click
       characterCardView.setOnClickListener {
         if (id < 0) return@setOnClickListener
         // updated selected
-        onSelect()
-        // navigate to character fragment
-        val extras = FragmentNavigatorExtras(
-          nameTextView to nameSharedElement,
-          characterImageView to imageShareElement,
-          characterCardView to containerSharedElement
-        )
-        val action =
-          CharacterListFragmentDirections.actionNavigationCharactersToNavigationCharacter(id)
-        findNavController().navigate(action, extras)
+        onSelect(itemView, action, extras)
       }
     }
   }

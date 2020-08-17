@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 class CharacterFragment : Fragment() {
 
-  private val args: CharacterListFragmentArgs by navArgs()
   private val viewModel by lazy {
     requireActivity().fetchViewModel {
       CharacterViewModel(
@@ -112,9 +111,10 @@ class CharacterFragment : Fragment() {
   }
 
   private fun setTransitions(view: View) {
-    val nameSharedElement = "${CharacterViewModel.CHARACTER_NAME_LABEL}${args.id}"
-    val imageSharedElement = "${CharacterViewModel.CHARACTER_IMAGE_LABEL}${args.id}"
-    val containerSharedElement = "${CharacterViewModel.CHARACTER_CONTAINER_LABEL}${args.id}"
+    val characterId = viewModel.getSelectedCharacter().value?.characterId
+    val nameSharedElement = "${CharacterViewModel.CHARACTER_NAME_LABEL}${characterId}"
+    val imageSharedElement = "${CharacterViewModel.CHARACTER_IMAGE_LABEL}${characterId}"
+    val containerSharedElement = "${CharacterViewModel.CHARACTER_CONTAINER_LABEL}${characterId}"
     ViewCompat.setTransitionName(view.nameTextView, nameSharedElement)
     ViewCompat.setTransitionName(view.characterImageView, imageSharedElement)
     ViewCompat.setTransitionName(view.containerView, containerSharedElement)

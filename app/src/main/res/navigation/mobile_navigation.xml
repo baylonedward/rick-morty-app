@@ -12,14 +12,7 @@
     tools:layout="@layout/fragment_characters">
     <action
       android:id="@+id/action_navigation_characters_to_navigation_character"
-      app:destination="@id/navigation_character">
-      <argument
-        android:name="id"
-        app:argType="integer" />
-    </action>
-    <argument
-      android:name="id"
-      app:argType="integer" />
+      app:destination="@id/navigation_character" />
   </fragment>
 
   <fragment

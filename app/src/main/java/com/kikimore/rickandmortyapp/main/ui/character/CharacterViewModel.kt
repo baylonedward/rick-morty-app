@@ -1,8 +1,12 @@
 package com.kikimore.rickandmortyapp.main.ui.character
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigator
 import com.android.component.rickmorty_api_component.RickAndMortyApi
 import com.android.component.rickmorty_api_component.data.entities.character.Character
 import com.android.component.rickmorty_api_component.data.entities.character.CharacterEpisodes
@@ -13,7 +17,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(application: Application) : ViewModel(),
+class CharacterViewModel(private val application: Application) : ViewModel(),
   EpisodeListStrategy {
 
   private val api = RickAndMortyApi(application)
@@ -23,17 +27,15 @@ class CharacterViewModel(application: Application) : ViewModel(),
   private val _characterAndEpisodeState = MutableStateFlow<Resource<CharacterEpisodes>?>(null)
   private val _selectedCharacter = MutableStateFlow<Character?>(null)
 
-  private fun getCharacter(position: Int): Character? {
-    return characters.value?.get(position)
-  }
+  private fun getCharacter(position: Int): Character? = characters.value?.get(position)
+
+  private fun getEpisode(position: Int) = episodes.value?.get(position)
 
   /**
    * Selected Character Methods
    */
 
-  fun onSelectCharacter(position: Int): () -> Unit = {
-    _selectedCharacter.value = getCharacter(position)
-  }
+  fun getSelectedCharacter() = _selectedCharacter
 
   fun getCharacterAndEpisodes() {
     _selectedCharacter.value?.characterId?.also { id ->
@@ -91,6 +93,13 @@ class CharacterViewModel(application: Application) : ViewModel(),
     return getCharacter(position)?.image
   }
 
+  fun onSelectCharacter(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
+    { view, action, extras ->
+      val character = getCharacter(position)
+      _selectedCharacter.value = character
+      view.findNavController().navigate(action, extras)
+    }
+
   /**
    * By dividing the current count of data into the page size we can determine what page is to be
    * be loaded next from the API.
@@ -101,11 +110,6 @@ class CharacterViewModel(application: Application) : ViewModel(),
   }
 
   fun endOffset() = LIST_END_OFFSET
-
-  /**
-   * Episode Methods
-   */
-  private fun getEpisode(position: Int) = episodes.value?.get(position)
 
   fun unloadEpisodes() {
     episodes.value = null

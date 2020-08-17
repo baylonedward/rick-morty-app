@@ -69,7 +69,9 @@ class CharacterRepository(
     // return observable resource
     launch {
       characterLocalDataSource.getCharacterAndEpisodes(characterId).map { Resource.success(it) }
-        .collect { send(it) }
+        .collect {
+          send(it)
+        }
     }
     // network call
     launch {
