@@ -7,6 +7,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.android.component.rickmorty_api_component.data.local.RickAndMortyDatabase
 import com.android.component.rickmorty_api_component.data.remote.CharacterRemoteDataSource
 import com.android.component.rickmorty_api_component.data.remote.CharacterService
+import com.android.component.rickmorty_api_component.data.remote.EpisodeRemoteDataSource
+import com.android.component.rickmorty_api_component.data.remote.EpisodeService
 import com.android.component.rickmorty_api_component.data.repository.CharacterRepository
 import com.android.component.rickmorty_api_component.utils.loggingInterceptor
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,8 @@ class AndroidTestSetup {
     .build()
   private val characterService = retrofit.create(CharacterService::class.java)
   private val characterRemoteDataSource = CharacterRemoteDataSource(characterService)
+  private val episodeService = retrofit.create(EpisodeService::class.java)
+  private val episodeRemoteDataSource = EpisodeRemoteDataSource(episodeService)
 
   fun characterDao() = db.characterDao()
   fun closeDb() = db.close()
@@ -43,7 +47,9 @@ class AndroidTestSetup {
     return CharacterRepository(
       characterLocalDataSource = db.characterDao(),
       characterRemoteDataSource = characterRemoteDataSource,
-      characterEpisodePivotLocalDataSource = db.characterEpisodePivotDao()
+      characterEpisodePivotLocalDataSource = db.characterEpisodePivotDao(),
+      episodeLocalDataSource = db.episodeDao(),
+      episodeRemoteDataSource = episodeRemoteDataSource
     )
   }
 
