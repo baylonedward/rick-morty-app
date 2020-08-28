@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#38ab44</color>
-  <color name="colorPrimaryDark">#1a863d</color>
-  <color name="colorAccent">#fdf7bc</color>
-  <color name="thunder">#3D373C</color>
-  <color name="emperor">#514950</color>
-  <color name="white">#FFFFFF</color>
-  <color name="shady_lady">#B6A5B4</color>
-  <color name="pale_prim">#fdf7bc</color>
-  <color name="black_overlay">#66000000</color>
-  <color name="light_blue">#b7d8eb</color>
-  <color name="dark_turquoise">#03b0c3</color>
-  <color name="dark_slate_gray">#01383a</color>
+<color name="colorPrimary">#38ab44</color>
+<color name="colorPrimaryDark">#1a863d</color>
+<color name="colorAccent">#fdf7bc</color>
+<color name="thunder">#3D373C</color>
+<color name="emperor">#514950</color>
+<color name="white">#FFFFFF</color>
+<color name="shady_lady">#B6A5B4</color>
+<color name="pale_prim">#fdf7bc</color>
+<color name="black_overlay">#66000000</color>
+<color name="light_blue">#b7d8eb</color>
+<color name="dark_turquoise">#03b0c3</color>
+<color name="dark_slate_gray">#01383a</color>
 </resources>
