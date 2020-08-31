@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListAdapter
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
-import kotlinx.android.synthetic.main.fragment_character.*
 import kotlinx.android.synthetic.main.fragment_character.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
@@ -41,6 +40,7 @@ class CharacterFragment : Fragment() {
       TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     // trigger episodes fetch
     viewModel.getCharacterAndEpisodes()
+    setObserver()
   }
 
   override fun onCreateView(
@@ -48,15 +48,13 @@ class CharacterFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val view = inflater.inflate(R.layout.fragment_character, container, false)
-    setEpisodeListAdapter(view.episodeListView)
-    return view
+    return inflater.inflate(R.layout.fragment_character, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setObserver(view)
     setTransitions(view)
+    setEpisodeListAdapter(view.episodeListView)
   }
 
   override fun onDestroy() {
@@ -64,12 +62,12 @@ class CharacterFragment : Fragment() {
     viewModel.unloadEpisodes()
   }
 
-  private fun setObserver(view: View) {
+  private fun setObserver() {
     viewModel.characterAndEpisodeState().onEach {
       if (it == null) return@onEach
       when (it.status) {
         Resource.Status.SUCCESS -> {
-          it.data?.character?.also { character -> setCharacter(character, view) }
+          it.data?.character?.also { character -> setCharacter(character) }
           episodeListAdapter.notifyDataSetChanged()
         }
         Resource.Status.LOADING -> {
@@ -81,27 +79,29 @@ class CharacterFragment : Fragment() {
     }.launchIn(lifecycleScope)
   }
 
-  private fun setCharacter(character: Character, view: View) {
-    // image url
-    Glide.with(view)
-      .load(character.image)
-      .centerInside()
-      .into(characterImageView)
-    // name
-    view.nameTextView.text = character.name
-    // status
-    val statusDrawable = if (character.status.contains(CharacterViewModel.DEAD, true))
-      ContextCompat.getDrawable(view.context, R.drawable.ic_dot_red)
-    else
-      ContextCompat.getDrawable(view.context, R.drawable.ic_dot_green)
-    view.statusImageView.setImageDrawable(statusDrawable)
-    // specie and gender
-    val specieGender = "${character.species} - ${character.gender}"
-    view.specieGenderTextView.text = specieGender
-    // origin
-    view.originTextView.text = character.status
-    //location
-    view.locationTextView.text = character.created
+  private fun setCharacter(character: Character) {
+    view?.apply {
+      // image url
+      Glide.with(this)
+        .load(character.image)
+        .centerInside()
+        .into(characterImageView)
+      // name
+      nameTextView.text = character.name
+      // status
+      val statusDrawable = if (character.status.contains(CharacterViewModel.DEAD, true))
+        ContextCompat.getDrawable(context, R.drawable.ic_dot_red)
+      else
+        ContextCompat.getDrawable(context, R.drawable.ic_dot_green)
+      statusImageView.setImageDrawable(statusDrawable)
+      // specie and gender
+      val specieGender = "${character.species} - ${character.gender}"
+      specieGenderTextView.text = specieGender
+      // origin
+      originTextView.text = character.status
+      //location
+      locationTextView.text = character.created
+    }
   }
 
   private fun setTransitions(view: View) {

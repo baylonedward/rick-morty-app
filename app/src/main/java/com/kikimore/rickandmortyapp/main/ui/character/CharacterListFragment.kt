@@ -29,6 +29,12 @@ class CharacterListFragment : Fragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     viewModel.getCharacters()
+    setObservers()
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setListAdapter(view.characterListView)
   }
 
   override fun onCreateView(
@@ -36,10 +42,7 @@ class CharacterListFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.fragment_characters, container, false)
-    setObservers()
-    setListAdapter(root.characterListView)
-    return root
+    return inflater.inflate(R.layout.fragment_characters, container, false)
   }
 
   private fun setObservers() {

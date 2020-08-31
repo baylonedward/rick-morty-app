@@ -1,8 +1,11 @@
 package com.kikimore.rickandmortyapp.main.ui.episode
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kikimore.rickandmortyapp.R
 import kotlinx.android.synthetic.main.episode_list_item_layout.view.*
@@ -13,6 +16,8 @@ import kotlinx.android.synthetic.main.episode_list_item_layout.view.*
  */
 class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
   RecyclerView.Adapter<EpisodeListAdapter.EpisodeListViewHolder>() {
+
+  private var lastPosition = -1
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeListViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
@@ -25,10 +30,28 @@ class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
   override fun getItemCount(): Int = episodeListStrategy.getEpisodeCount()
 
   override fun onBindViewHolder(holder: EpisodeListViewHolder, position: Int) {
-    holder.bind(
-      episodeListStrategy.getEpisodeSummary(position),
-      episodeListStrategy.getEpisodeAirDate(position),
-      episodeListStrategy.onEpisodeClick(position)
+    holder.apply {
+      bind(
+        episodeListStrategy.getEpisodeSummary(position),
+        episodeListStrategy.getEpisodeAirDate(position),
+        episodeListStrategy.onEpisodeClick(position)
+      )
+      // animate on first appearance
+      if (position > lastPosition) {
+        itemView.apply {
+          animation = getItemAnimation(itemView.context)
+          startAnimation(animation)
+        }
+        lastPosition = position
+      }
+    }
+  }
+
+  private fun getItemAnimation(context: Context): Animation {
+    // set item animation
+    return AnimationUtils.loadAnimation(
+      context,
+      R.anim.item_animation_from_bottom
     )
   }
 
