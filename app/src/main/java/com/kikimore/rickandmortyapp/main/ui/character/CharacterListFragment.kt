@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,7 @@ class CharacterListFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setListAdapter(view.characterListView)
+    setSearchView(view.characterSearchView)
   }
 
   override fun onCreateView(
@@ -46,6 +48,7 @@ class CharacterListFragment : Fragment() {
   }
 
   private fun setObservers() {
+    // character list state
     viewModel.characterListState().onEach {
       if (it == null) return@onEach
       when (it.status) {
@@ -58,6 +61,10 @@ class CharacterListFragment : Fragment() {
           Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show()
         }
       }
+    }.launchIn(lifecycleScope)
+    // search result
+    viewModel.getSearchResult().onEach {
+      listAdapter.notifyDataSetChanged()
     }.launchIn(lifecycleScope)
   }
 
@@ -72,5 +79,19 @@ class CharacterListFragment : Fragment() {
         true
       }
     }
+  }
+
+  private fun setSearchView(searchView: SearchView) {
+    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+      override fun onQueryTextSubmit(query: String?): Boolean {
+        query?.also { viewModel.search(it) }
+        return true
+      }
+
+      override fun onQueryTextChange(newText: String?): Boolean {
+        newText?.also { viewModel.search(it) }
+        return true
+      }
+    })
   }
 }

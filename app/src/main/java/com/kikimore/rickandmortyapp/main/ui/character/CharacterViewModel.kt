@@ -14,6 +14,7 @@ import com.android.component.rickmorty_api_component.data.entities.episode.Episo
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListStrategy
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
@@ -22,18 +23,43 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
   CharacterListStrategy {
 
   private val characters = MutableStateFlow<List<Character>?>(null)
+  private val filteredCharacters = MutableStateFlow<List<Character>?>(null)
   private val _characterListState = MutableStateFlow<Resource<List<Character>>?>(null)
   private val episodes = MutableStateFlow<List<Episode>?>(null)
   private val _characterAndEpisodeState = MutableStateFlow<Resource<CharacterEpisodes>?>(null)
   private val _selectedCharacter = MutableStateFlow<Character?>(null)
+  private val searchText = MutableStateFlow<String?>(null)
+  private val searchResult = MutableStateFlow<String?>(null)
 
-  private fun getCharacter(position: Int): Character? = characters.value?.get(position)
+  init {
+    // observe search field from the beginning
+    searchObserver()
+  }
+
+  private fun getCharacter(position: Int): Character? = filteredCharacters.value?.get(position)
 
   private fun getEpisode(position: Int) = episodes.value?.get(position)
 
-  /**
-   * Character Methods
-   */
+  private fun searchObserver() {
+    searchText.onEach { word ->
+      if (word == null) return@onEach
+      if (word.isNotEmpty()) {
+        filteredCharacters.value = characters.value?.filter { characters ->
+          val name = characters.name.toLowerCase()
+          val status = characters.status.toLowerCase()
+          val species = characters.species.toLowerCase()
+          val finalWord = word.toLowerCase()
+          name.contains(finalWord, true)
+           || status.contains(finalWord, true)
+           || species.contains(finalWord, true)
+        }
+      } else {
+        filteredCharacters.value = characters.value
+      }
+      // update result
+      searchResult.value = word
+    }.flowOn(Dispatchers.Default).launchIn(viewModelScope)
+  }
 
   fun getSelectedCharacter() = _selectedCharacter
 
@@ -59,7 +85,10 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
       .catch { }
       .onEach {
         _characterListState.value = it
-        if (it.data != null) characters.value = it.data
+        if (it.data != null) {
+          characters.value = it.data
+          filteredCharacters.value = it.data
+        }
       }.launchIn(viewModelScope)
   }
 
@@ -69,11 +98,17 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
     episodes.value = null
   }
 
+  fun search(text: String) {
+    searchText.value = text
+  }
+
+  fun getSearchResult() = searchResult
+
   /**
    * CharacterList Strategy methods
    */
 
-  override fun characterCount() = characters.value?.count() ?: 0
+  override fun characterCount() = filteredCharacters.value?.count() ?: 0
 
   override fun getId(position: Int) = getCharacter(position)?.characterId ?: 0
 
@@ -106,6 +141,9 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
     }
 
   override fun onLoadMoreCharacters(position: Int) {
+    // if searching locally don't load more characters
+    if (characters.value != filteredCharacters.value) return
+    // if list position = offset before end of list load more characters
     if (position == characterCount() - LIST_END_OFFSET) {
       val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
       api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)
@@ -116,7 +154,7 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
     // set item animation
     val animation = AnimationUtils.loadAnimation(
       view.context,
-      R.anim.item_animation_fall_down
+      R.anim.item_animation_from_right
     )
     view.startAnimation(animation)
     return position
