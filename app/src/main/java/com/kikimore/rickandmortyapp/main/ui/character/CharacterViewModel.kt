@@ -1,6 +1,7 @@
 package com.kikimore.rickandmortyapp.main.ui.character
 
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDirections
@@ -11,12 +12,14 @@ import com.android.component.rickmorty_api_component.data.entities.character.Cha
 import com.android.component.rickmorty_api_component.data.entities.character.CharacterEpisodes
 import com.android.component.rickmorty_api_component.data.entities.episode.Episode
 import com.android.component.rickmorty_api_component.utils.Resource
+import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListStrategy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
-class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), EpisodeListStrategy {
+class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), EpisodeListStrategy,
+  CharacterListStrategy {
 
   private val characters = MutableStateFlow<List<Character>?>(null)
   private val _characterListState = MutableStateFlow<Resource<List<Character>>?>(null)
@@ -29,7 +32,7 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
   private fun getEpisode(position: Int) = episodes.value?.get(position)
 
   /**
-   * Selected Character Methods
+   * Character Methods
    */
 
   fun getSelectedCharacter() = _selectedCharacter
@@ -50,9 +53,6 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
 
   fun characterAndEpisodeState() = _characterAndEpisodeState
 
-  /**
-   * Character List methods: Start
-   */
   fun getCharacters() {
     api.characterRepository().getCharacters()
       .distinctUntilChanged()
@@ -65,47 +65,61 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
 
   fun characterListState() = _characterListState
 
-  fun characterCount() = characters.value?.count() ?: 0
+  fun unloadEpisodes() {
+    episodes.value = null
+  }
 
-  fun getId(position: Int) = getCharacter(position)?.characterId ?: 0
+  /**
+   * CharacterList Strategy methods
+   */
 
-  fun getName(position: Int): String {
+  override fun characterCount() = characters.value?.count() ?: 0
+
+  override fun getId(position: Int) = getCharacter(position)?.characterId ?: 0
+
+  override fun getName(position: Int): String {
     return getCharacter(position)?.name ?: NOT_APPLICABLE
   }
 
-  fun getStatus(position: Int): String {
+  override fun getStatus(position: Int): String {
     val character = getCharacter(position)
     return "${character?.status} - ${character?.species}"
   }
 
-  fun getLocation(position: Int): String {
+  override fun getLocation(position: Int): String {
     return getCharacter(position)?.gender ?: NOT_APPLICABLE
   }
 
-  fun getFirstEpisode(position: Int): String {
+  override fun getFirstEpisode(position: Int): String {
     return getCharacter(position)?.created ?: NOT_APPLICABLE
   }
 
-  fun getImageUrl(position: Int): String? {
+  override fun getImageUrl(position: Int): String? {
     return getCharacter(position)?.image
   }
 
-  fun onSelectCharacter(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
+  override fun onSelectCharacter(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
     { view, action, extras ->
       val character = getCharacter(position)
       _selectedCharacter.value = character
       view.findNavController().navigate(action, extras)
     }
 
-  fun loadMoreCharacters() {
-    val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
-    api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)
+  override fun onLoadMoreCharacters(position: Int) {
+    if (position == characterCount() - LIST_END_OFFSET) {
+      val pageNumber = (characterCount() / API_DEFAULT_PAGE_SIZE) + 1
+      api.characterRepository().getCharacters(pageNumber).launchIn(viewModelScope)
+    }
   }
 
-  fun endOffset() = LIST_END_OFFSET
-
-  fun unloadEpisodes() {
-    episodes.value = null
+  override fun setCharacterAnimation(view: View, position: Int, lastPosition: Int?): Int {
+    // set item animation
+    val animation = AnimationUtils.loadAnimation(
+      view.context,
+      R.anim.item_animation_fall_down
+    )
+    view.startAnimation(animation)
+    return position
   }
 
   /**

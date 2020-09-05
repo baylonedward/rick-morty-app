@@ -28,11 +28,7 @@ import kotlinx.coroutines.flow.onEach
 class CharacterFragment : Fragment() {
   private val api by lazy { RickAndMortyApi(requireActivity().application) }
   private val viewModel by lazy { requireActivity().fetchViewModel { CharacterViewModel(api) } }
-  private val episodeListAdapter by lazy {
-    EpisodeListAdapter(
-      viewModel
-    )
-  }
+  private val episodeListAdapter by lazy { EpisodeListAdapter(viewModel) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
