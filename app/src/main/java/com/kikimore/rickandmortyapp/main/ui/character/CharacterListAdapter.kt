@@ -31,7 +31,7 @@ class CharacterListAdapter(private val characterListStrategy: CharacterListStrat
         characterListStrategy.getLocation(position),
         characterListStrategy.getFirstEpisode(position),
         characterListStrategy.getImageUrl(position),
-        characterListStrategy.onSelectCharacter(position)
+        characterListStrategy.onCharacterSelect(position)
       )
       // animate on first appearance
       characterListStrategy.setCharacterAnimation(itemView, position)

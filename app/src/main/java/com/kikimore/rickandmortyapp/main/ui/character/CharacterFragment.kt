@@ -21,10 +21,12 @@ import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListAdapter
 import com.kikimore.rickandmortyapp.utils.fetchViewModel
 import kotlinx.android.synthetic.main.fragment_character.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
+@FlowPreview
 class CharacterFragment : Fragment() {
   private val api by lazy { RickAndMortyApi(requireActivity().application) }
   private val viewModel by lazy { requireActivity().fetchViewModel { CharacterViewModel(api) } }
@@ -36,7 +38,6 @@ class CharacterFragment : Fragment() {
       TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     // trigger episodes fetch
     viewModel.getCharacterAndEpisodes()
-    setObserver()
   }
 
   override fun onCreateView(
@@ -51,6 +52,7 @@ class CharacterFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     setTransitions(view)
     setEpisodeListAdapter(view.episodeListView)
+    setObserver()
   }
 
   override fun onDestroy() {

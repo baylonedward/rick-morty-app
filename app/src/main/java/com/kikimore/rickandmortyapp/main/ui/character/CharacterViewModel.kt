@@ -14,11 +14,12 @@ import com.android.component.rickmorty_api_component.data.entities.episode.Episo
 import com.android.component.rickmorty_api_component.utils.Resource
 import com.kikimore.rickandmortyapp.R
 import com.kikimore.rickandmortyapp.main.ui.episode.EpisodeListStrategy
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
+@FlowPreview
 class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), EpisodeListStrategy,
   CharacterListStrategy {
 
@@ -41,24 +42,28 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
   private fun getEpisode(position: Int) = episodes.value?.get(position)
 
   private fun searchObserver() {
-    searchText.onEach { word ->
-      if (word == null) return@onEach
-      if (word.isNotEmpty()) {
-        filteredCharacters.value = characters.value?.filter { characters ->
-          val name = characters.name.toLowerCase()
-          val status = characters.status.toLowerCase()
-          val species = characters.species.toLowerCase()
-          val finalWord = word.toLowerCase()
-          name.contains(finalWord, true)
-           || status.contains(finalWord, true)
-           || species.contains(finalWord, true)
+    searchText
+      .debounce(500L)
+      .onEach { word ->
+        if (word == null) return@onEach
+        if (word.isNotEmpty()) {
+          filteredCharacters.value = characters.value?.filter { characters ->
+            val name = characters.name.toLowerCase()
+            val status = characters.status.toLowerCase()
+            val species = characters.species.toLowerCase()
+            val gender = characters.gender.toLowerCase()
+            val finalWord = word.toLowerCase()
+            name.contains(finalWord, true)
+             || status.contains(finalWord, true)
+             || species.contains(finalWord, true)
+             || gender.equals(finalWord, true)
+          }
+        } else {
+          filteredCharacters.value = characters.value
         }
-      } else {
-        filteredCharacters.value = characters.value
-      }
-      // update result
-      searchResult.value = word
-    }.flowOn(Dispatchers.Default).launchIn(viewModelScope)
+        // update result
+        searchResult.value = word
+      }.launchIn(viewModelScope)
   }
 
   fun getSelectedCharacter() = _selectedCharacter
@@ -133,10 +138,12 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
     return getCharacter(position)?.image
   }
 
-  override fun onSelectCharacter(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
+  override fun onCharacterSelect(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
     { view, action, extras ->
       val character = getCharacter(position)
       _selectedCharacter.value = character
+      view.findNavController()
+        .popBackStack(action.actionId, true) // if fragment already exist pop it first
       view.findNavController().navigate(action, extras)
     }
 
@@ -177,9 +184,13 @@ class CharacterViewModel(private val api: RickAndMortyApi) : ViewModel(), Episod
     return episodes.value?.size ?: 0
   }
 
-  override fun onEpisodeClick(position: Int): () -> Unit = {
-    println("Episode Click: ${getEpisode(position)}")
-  }
+  override fun onEpisodeSelect(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit =
+    { view, action, extras ->
+      println("Episode Click: ${getEpisode(position)}")
+      view.findNavController()
+        .popBackStack(action.actionId, true) // if fragment already exist pop it first
+      view.findNavController().navigate(action, extras)
+    }
 
   companion object {
     private const val LIST_END_OFFSET = 5

@@ -14,4 +14,5 @@
 
   <!-- Episode -->
   <string name="episode">Episode</string>
+  <string name="label_character">Characters:</string>
 </resources>

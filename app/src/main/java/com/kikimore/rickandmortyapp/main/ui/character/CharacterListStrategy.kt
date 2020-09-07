@@ -20,7 +20,7 @@ interface CharacterListStrategy {
   fun getLocation(position: Int): String
   fun getFirstEpisode(position: Int): String
   fun getImageUrl(position: Int): String?
-  fun onSelectCharacter(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit
+  fun onCharacterSelect(position: Int): (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit
   fun onLoadMoreCharacters(position: Int)
   fun setCharacterAnimation(view: View, position: Int, lastPosition: Int? = null): Int
 }

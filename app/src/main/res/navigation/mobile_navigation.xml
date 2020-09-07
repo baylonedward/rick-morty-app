@@ -31,5 +31,17 @@
     android:id="@+id/navigation_character"
     android:name="com.kikimore.rickandmortyapp.main.ui.character.CharacterFragment"
     android:label="@string/character"
-    tools:layout="@layout/fragment_character" />
+    tools:layout="@layout/fragment_character" >
+    <action
+      android:id="@+id/action_navigation_character_episodes_to_navigation_episode"
+      app:destination="@id/navigation_episode" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/navigation_episode"
+    android:name="com.kikimore.rickandmortyapp.main.ui.episode.EpisodeFragment"
+    android:label="Episode"
+    tools:layout="@layout/fragment_episode">
+
+  </fragment>
 </navigation>

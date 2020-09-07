@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/colorAccent"
+  tools:context=".main.ui.episode.EpisodeFragment">
+
+
+  <TextView
+    android:id="@+id/episodeTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:fontFamily="sans-serif-condensed-medium"
+    android:textColor="@color/dark_slate_gray"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="S01E01" />
+
+  <TextView
+    android:id="@+id/nameTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:fontFamily="sans-serif-condensed"
+    android:textSize="20sp"
+    app:layout_constraintEnd_toEndOf="@+id/episodeTextView"
+    app:layout_constraintStart_toStartOf="@+id/episodeTextView"
+    app:layout_constraintTop_toBottomOf="@+id/episodeTextView"
+    tools:text="Pilot" />
+
+  <TextView
+    android:id="@+id/airDateTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:fontFamily="sans-serif-condensed"
+    app:layout_constraintEnd_toEndOf="@+id/nameTextView"
+    app:layout_constraintStart_toStartOf="@+id/nameTextView"
+    app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+    tools:text="December 31, 2013" />
+
+  <TextView
+    android:id="@+id/characterLabelTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="32dp"
+    android:layout_marginEnd="16dp"
+    android:fontFamily="sans-serif-condensed"
+    android:text="@string/label_character"
+    android:textSize="18sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/airDateTextView" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/characterListView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="4dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/characterLabelTextView"
+    tools:listitem="@layout/character_list_item_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

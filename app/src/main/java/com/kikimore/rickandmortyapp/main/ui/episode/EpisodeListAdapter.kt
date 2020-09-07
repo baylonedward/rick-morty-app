@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.kikimore.rickandmortyapp.R
+import com.kikimore.rickandmortyapp.main.ui.character.CharacterFragmentDirections
 import kotlinx.android.synthetic.main.episode_list_item_layout.view.*
 
 /**
@@ -34,7 +38,7 @@ class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
       bind(
         episodeListStrategy.getEpisodeSummary(position),
         episodeListStrategy.getEpisodeAirDate(position),
-        episodeListStrategy.onEpisodeClick(position)
+        episodeListStrategy.onEpisodeSelect(position)
       )
       // animate on first appearance
       if (position > lastPosition) {
@@ -56,11 +60,19 @@ class EpisodeListAdapter(private val episodeListStrategy: EpisodeListStrategy) :
   }
 
   class EpisodeListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(summary: String, airDate: String, onClick: () -> Unit) {
+    fun bind(
+      summary: String,
+      airDate: String,
+      onClick: (view: View, action: NavDirections, extras: FragmentNavigator.Extras) -> Unit
+    ) {
       itemView.episodeDetailTextView.text = summary
       itemView.episodeAirDateTextView.text = airDate
       itemView.episodeCardView.setOnClickListener {
-        onClick()
+        // navigate to character fragment
+        val extras: FragmentNavigator.Extras = FragmentNavigatorExtras()
+        val action =
+          CharacterFragmentDirections.actionNavigationCharacterEpisodesToNavigationEpisode()
+        onClick(itemView, action, extras)
       }
     }
   }
